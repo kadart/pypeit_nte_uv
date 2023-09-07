@@ -1,0 +1,16 @@
+# flags:
+#    0 = wavelength has not been assigned to this detection
+#    1 = user has assigned wavelength to this detection
+#    2 = detection has been automatically assigned
+#    3 = automatically assigned wavelength was rejected
+|              pixel | wavelength | flag |
+| 1422.3454457257296 |   4511.999 |    1 |
+| 1459.6482763589172 |   4523.592 |    1 |
+| 1695.8651210534151 |   4597.384 |    1 |
+| 1799.5903046295336 |   4629.737 |    1 |
+| 2036.7050483473072 |   4703.632 |    1 |
+| 2619.0741824614865 |   4884.365 |    1 |
+| 2726.0843038627336 |   4917.418 |    1 |
+| 2869.2203787380386 |    4961.56 |    1 |
+|  2902.065705876844 |   4971.761 |    1 |
+| 2935.1996010070625 |   4982.029 |    1 |

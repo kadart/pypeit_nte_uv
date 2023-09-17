@@ -1134,13 +1134,17 @@ class NOTNTEUVSpectrograph(NOTNTESpectrograph):
         #turn_on = dict(use_biasimage=True, use_overscan=False, overscan_method='median',
         #               use_darkimage=False, use_illumflat=False, use_pixelflat=False,
         #               use_specillum=False)
-        turn_off = dict(use_overscan=False)
+        turn_off = dict(use_overscan=False , use_illumflat=False , use_darkimage=False)
         par.reset_all_processimages_par(**turn_off)
 
+
+        par['calibrations']['standardframe']['process']['mask_cr'] = False
+        par['scienceframe']['process']['mask_cr'] = False
+
         # The below is sufficient for OK edge tracing, probably not a necessary set
-        par['calibrations']['slitedges']['edge_thresh'] = 3.0
+        par['calibrations']['slitedges']['edge_thresh'] = 2.0
         par['calibrations']['slitedges']['fit_order'] = 5
-        par['calibrations']['slitedges']['max_shift_adj'] = 0.5
+        par['calibrations']['slitedges']['max_shift_adj'] = 0.8
         par['calibrations']['slitedges']['trace_thresh'] = 3.0
         par['calibrations']['slitedges']['fit_min_spec_length'] = 0.1
         par['calibrations']['slitedges']['length_range'] = 0.3
@@ -1156,41 +1160,42 @@ class NOTNTEUVSpectrograph(NOTNTESpectrograph):
 
         # Start on wl calib
         par['calibrations']['wavelengths']['lamps'] = ["HgAr_NTE_UV"]
-        par['calibrations']['wavelengths']['rms_threshold'] = 0.4
+        #par['calibrations']['wavelengths']['rms_threshold'] = 0.8 
         par['calibrations']['wavelengths']['sigdetect'] = 2.0
         par['calibrations']['wavelengths']['fwhm'] = 4.0
-        par['calibrations']['wavelengths']['n_final'] = 4# [2, 4, 4, 4, 4, 4, 4, 4]
+        par['calibrations']['wavelengths']['n_final'] =  6
+        par['calibrations']['wavelengths']['n_first'] =  2
         par['calibrations']['wavelengths']['nreid_min'] = 1 # important
-        
         par['calibrations']['wavelengths']['reference'] = 'arc'
-        par['calibrations']['wavelengths']['reid_arxiv'] = 'not_nte_uv.fits'
+        par['calibrations']['wavelengths']['reid_arxiv'] = 'not_nte_uv_5.fits'
         par['calibrations']['wavelengths']['method'] = 'full_template'
         par['calibrations']['wavelengths']['nsnippet'] = 1 # important
 
         # Echelle parameters
         par['calibrations']['wavelengths']['echelle'] = True
-        par['calibrations']['wavelengths']['ech_nspec_coeff'] = 4
-        par['calibrations']['wavelengths']['ech_norder_coeff'] = 4
+        par['calibrations']['wavelengths']['ech_nspec_coeff'] = 5
+        par['calibrations']['wavelengths']['ech_norder_coeff'] = 5
         par['calibrations']['wavelengths']['ech_sigrej'] = 3.0
 
         # tilts
-        #par['calibrations']['tilts']['spat_order'] =  3
+        #par['calibrations']['tilts']['spat_order'] =  2
         
         # Flat
         par['calibrations']['flatfield']['slit_illum_finecorr'] = False # turn off for now
 
         # skysub
-        par['reduce']['skysub']['bspline_spacing'] = 1
+        par['reduce']['skysub']['user_regions'] = ':30,70:'
+        #par['reduce']['skysub']['global_sky_std'] = False
+        #par['reduce']['skysub']['no_local_sky'] = True
 
         # extraction
         par['reduce']['findobj']['maxnumber_sci'] = 1
         par['reduce']['findobj']['maxnumber_std'] = 1
+        par['reduce']['extraction']['use_2dmodel_mask'] = False
 
 
         # Sensitivity function parameters
-        par['sensfunc']['algorithm'] = 'IR'
-        #par['sensfunc']['polyorder'] = [9, 11, 11, 9, 9, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7]
-        #par['sensfunc']['IR']['telgridfile'] = 'TelFit_Paranal_VIS_4900_11100_R25000.fits'
+        par['sensfunc']['algorithm'] = 'UVIS'
 
         return par
 
@@ -1208,11 +1213,11 @@ class NOTNTEUVSpectrograph(NOTNTESpectrograph):
         """
 
         return np.array(#[0.14648438, 0.29296875, 
-            [0.43945312, 0.5859375,
-                         0.73242188, 0.859375])
+            [0.44238312, 0.5878906,
+                         0.72558594, 0.852539])
 
 
-        #np.array([150, 300, 450, 600, 750, 880]) were positions used for UV
+        #np.array([150, 300, 453, 601, 743, 873]) were positions used for UV
         #np.array([177, 323, 446, 563, 665, 770 ,870,960])are positions used for VIS
 
         # normalised by the detector height
@@ -1231,7 +1236,7 @@ class NOTNTEUVSpectrograph(NOTNTESpectrograph):
         spectral range of each order.
         """
         spec_min = np.asarray([0]*4)
-        spec_max = np.asarray([1000,1000,1000,1000])
+        spec_max = np.asarray([4400,4400,4400,4400])
         return np.vstack((spec_min, spec_max))
     
 #Really don't know what this section will do
@@ -1281,7 +1286,7 @@ class NOTNTEUVSpectrograph(NOTNTESpectrograph):
         Return the base-10 logarithm of the first and last wavelength for
         ouput spectra.
         """
-        return np.log10(3000), np.log10(4300)
+        return np.log10(3300), np.log10(4300)
 
     def bpm(self, filename, det, shape=None, msbias=None):
         """

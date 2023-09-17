@@ -4,16 +4,16 @@ import glob
 wavelength_soln_files = glob.glob("./wvcalib*.fits")
 
 wavelength_soln_files = [
-    "wvcalib_order19_3.fits", # [3644.0,     3297.0]
-    "wvcalib_order18_3.fits", # [3857.0,     3470.0],
-    "wvcalib_order17_3.fits", # [4096.0,     3662.0],
-    "wvcalib_order16_3.fits", # [4366.0,     3877.0],
+    "wvcalib_order19_5.fits", # [3644.0,     3297.0]
+    "wvcalib_order18_5.fits", # [3857.0,     3470.0],
+    "wvcalib_order17_5.fits", # [4096.0,     3662.0],
+    "wvcalib_order16_5.fits", # [4366.0,     3877.0],
                          ]
 
 slits = [
          #49,188,313,429,538,641,739,836 # THIS FOR UNMASKED
          #82,198,323,439,548,651,749,845 # THIS FOR MASKED
-         453,604,745,877  # This is a blend
+         453,604,745,870  # This is a blend
          
          ]
 
@@ -22,7 +22,7 @@ wv_cuts = [
     ]
 
 binspec = 1
-outroot = "not_nte_uv_3.fits"
+outroot = "not_nte_uv_5.fits"
 #print(wavelength_soln_files)
 
 templates.build_template(wavelength_soln_files,
